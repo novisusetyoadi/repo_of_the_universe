@@ -1,0 +1,72 @@
+---
+title: "data wrangling using tidyverse and dplyr"
+author: "Novi s adi"
+date: "10/2/2021"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)     ## install.packages("tidyverse")
+```
+
+```{r}
+## read gapminder csv. Note the readr:: prefix identifies which package it's in
+gapminder <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv') 
+```
+
+```{r}
+## explore the gapminder dataset
+gapminder # this is super long! Let's inspect in different ways
+```
+
+```{r}
+head(gapminder) # shows first 6
+tail(gapminder) # shows last 6
+```
+
+```{r}
+head(gapminder, 10) # shows first 10
+tail(gapminder, 12) # shows last 12
+```
+
+```{r}
+str(gapminder) # ?str - displays the structure of an object
+```
+
+```{r}
+names(gapminder)
+dim(gapminder)    # ?dim dimension
+ncol(gapminder)   # ?ncol number of columns
+nrow(gapminder)   # ?nrow number of rows
+```
+
+```{r}
+summary(gapminder)
+```
+
+```{r}
+library(skimr) # install.packages('skimr')
+```
+
+```{r}
+skim(gapminder)
+```
+
+```{r}
+gapminder$lifeExp # very long! hard to make sense of...
+```
+
+```{r}
+head(gapminder$lifeExp) # can do the same tests we tried before
+```
+
+```{r}
+str(gapminder$lifeExp) # it is a single numeric vector
+```
+
+```{r}
+summary(gapminder$lifeExp) # same information, formatted slightly differently
+```
+
+# Sampai 6.4 dplyr basics
