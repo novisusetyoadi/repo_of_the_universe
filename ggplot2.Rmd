@@ -1,0 +1,10 @@
+---
+title: "cherish_the_life"
+author: "Novi s adi"
+date: "10/2/2021"
+output: html_document
+---
+
+# Learning ggplot2
+
+We're learning ggplot2. It's going to be amazing.
