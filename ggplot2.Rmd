@@ -1,5 +1,5 @@
 ---
-title: "cherish_the_life"
+title: "learnig ggplot2 using OHI data"
 author: "Novi s adi"
 date: "10/2/2021"
 output: html_document

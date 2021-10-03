@@ -685,8 +685,177 @@ gapminder # this is super long! Let&#39;s inspect in different ways</code></pre>
 <pre class="r"><code>summary(gapminder$lifeExp) # same information, formatted slightly differently</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   23.60   48.20   60.71   59.47   70.85   82.60</code></pre>
-<div id="sampai-6.4-dplyr-basics" class="section level1">
-<h1>Sampai 6.4 dplyr basics</h1>
+<div id="dplyr-basics" class="section level1">
+<h1>6.4 dplyr basics</h1>
+<div id="filter-is-a-function-in-dplyr-that-takes-logical-expressions-and-returns-the-rows-for-which-all-are-true." class="section level2">
+<h2>filter() is a function in dplyr that takes logical expressions and returns the rows for which all are TRUE.</h2>
+<pre class="r"><code>filter(gapminder, lifeExp &lt; 29)</code></pre>
+<pre><code>## # A tibble: 2 x 6
+##   country      year     pop continent lifeExp gdpPercap
+##   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Afghanistan  1952 8425333 Asia         28.8      779.
+## 2 Rwanda       1992 7290203 Africa       23.6      737.</code></pre>
+<pre class="r"><code>filter(gapminder, country == &quot;Mexico&quot;)</code></pre>
+<pre><code>## # A tibble: 12 x 6
+##    country  year       pop continent lifeExp gdpPercap
+##    &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Mexico   1952  30144317 Americas     50.8     3478.
+##  2 Mexico   1957  35015548 Americas     55.2     4132.
+##  3 Mexico   1962  41121485 Americas     58.3     4582.
+##  4 Mexico   1967  47995559 Americas     60.1     5755.
+##  5 Mexico   1972  55984294 Americas     62.4     6809.
+##  6 Mexico   1977  63759976 Americas     65.0     7675.
+##  7 Mexico   1982  71640904 Americas     67.4     9611.
+##  8 Mexico   1987  80122492 Americas     69.5     8688.
+##  9 Mexico   1992  88111030 Americas     71.5     9472.
+## 10 Mexico   1997  95895146 Americas     73.7     9767.
+## 11 Mexico   2002 102479927 Americas     74.9    10742.
+## 12 Mexico   2007 108700891 Americas     76.2    11978.</code></pre>
+<pre class="r"><code>filter(gapminder, country %in% c(&quot;Mexico&quot;, &quot;Peru&quot;))</code></pre>
+<pre><code>## # A tibble: 24 x 6
+##    country  year      pop continent lifeExp gdpPercap
+##    &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Mexico   1952 30144317 Americas     50.8     3478.
+##  2 Mexico   1957 35015548 Americas     55.2     4132.
+##  3 Mexico   1962 41121485 Americas     58.3     4582.
+##  4 Mexico   1967 47995559 Americas     60.1     5755.
+##  5 Mexico   1972 55984294 Americas     62.4     6809.
+##  6 Mexico   1977 63759976 Americas     65.0     7675.
+##  7 Mexico   1982 71640904 Americas     67.4     9611.
+##  8 Mexico   1987 80122492 Americas     69.5     8688.
+##  9 Mexico   1992 88111030 Americas     71.5     9472.
+## 10 Mexico   1997 95895146 Americas     73.7     9767.
+## # ... with 14 more rows</code></pre>
+<pre class="r"><code>filter(gapminder, country == &quot;Mexico&quot;, year == 2002)</code></pre>
+<pre><code>## # A tibble: 1 x 6
+##   country  year       pop continent lifeExp gdpPercap
+##   &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Mexico   2002 102479927 Americas     74.9    10742.</code></pre>
+</div>
+</div>
+<div id="your-turn" class="section level1">
+<h1>6.6 Your turn</h1>
+<div id="what-was-the-average-life-expectency-in-brazil-between-1987-and-2007" class="section level2">
+<h2>What was the average life expectency in Brazil between 1987 and 2007?</h2>
+</div>
+<div id="hint-do-this-in-2-steps-by-assigning-a-variable-and-then-using-the-mean-function." class="section level2">
+<h2>Hint: do this in 2 steps by assigning a variable and then using the mean() function.</h2>
+</div>
+<div id="then-sync-to-github.com-pull-stage-commit-push." class="section level2">
+<h2>Then, sync to Github.com (pull, stage, commit, push).</h2>
+<pre class="r"><code>b &lt;- filter (gapminder, country == &quot;Brazil&quot;, year &gt; 1986)</code></pre>
+<pre class="r"><code>mean (b$lifeExp)</code></pre>
+<pre><code>## [1] 69.0092</code></pre>
+</div>
+</div>
+<div id="select-subsets-data-column-wise-variables" class="section level1">
+<h1>6.7 select() subsets data column-wise (variables)</h1>
+<div id="we-use-select-to-subset-the-data-on-variables-or-columns." class="section level2">
+<h2>We use select() to subset the data on variables or columns.</h2>
+<pre class="r"><code>select(gapminder, year, country, lifeExp) </code></pre>
+<pre><code>## # A tibble: 1,704 x 3
+##     year country     lifeExp
+##    &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;
+##  1  1952 Afghanistan    28.8
+##  2  1957 Afghanistan    30.3
+##  3  1962 Afghanistan    32.0
+##  4  1967 Afghanistan    34.0
+##  5  1972 Afghanistan    36.1
+##  6  1977 Afghanistan    38.4
+##  7  1982 Afghanistan    39.9
+##  8  1987 Afghanistan    40.8
+##  9  1992 Afghanistan    41.7
+## 10  1997 Afghanistan    41.8
+## # ... with 1,694 more rows</code></pre>
+<pre class="r"><code>select(gapminder, -continent, -lifeExp) # you can use - to deselect columns </code></pre>
+<pre><code>## # A tibble: 1,704 x 4
+##    country      year      pop gdpPercap
+##    &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Afghanistan  1952  8425333      779.
+##  2 Afghanistan  1957  9240934      821.
+##  3 Afghanistan  1962 10267083      853.
+##  4 Afghanistan  1967 11537966      836.
+##  5 Afghanistan  1972 13079460      740.
+##  6 Afghanistan  1977 14880372      786.
+##  7 Afghanistan  1982 12881816      978.
+##  8 Afghanistan  1987 13867957      852.
+##  9 Afghanistan  1992 16317921      649.
+## 10 Afghanistan  1997 22227415      635.
+## # ... with 1,694 more rows</code></pre>
+</div>
+</div>
+<div id="use-select-and-filter-together" class="section level1">
+<h1>6.8 Use select() and filter() together</h1>
+<pre class="r"><code>gap_cambodia  &lt;- filter(gapminder, country == &quot;Cambodia&quot;)</code></pre>
+<pre class="r"><code>gap_cambodia2 &lt;- select(gap_cambodia, -continent, -lifeExp)</code></pre>
+</div>
+<div id="meet-the-new-pipe-operator" class="section level1">
+<h1>6.9 Meet the new pipe %&gt;% operator</h1>
+<div id="before-we-go-any-further-we-should-explore-the-new-pipe-operator-that-dplyr-imports-from-the-magrittr-package-by-stefan-bache.-this-is-going-to-change-your-life.-you-no-longer-need-to-enact-multi-operation-commands-by-nesting-them-inside-each-other.-and-we-wont-need-to-make-temporary-variables-like-we-did-in-the-cambodia-example-above.-this-new-syntax-leads-to-code-that-is-much-easier-to-write-and-to-read-it-actually-tells-the-story-of-your-analysis." class="section level2">
+<h2>Before we go any further, we should explore the new pipe operator that dplyr imports from the magrittr package by Stefan Bache. This is going to change your life. You no longer need to enact multi-operation commands by nesting them inside each other. And we won’t need to make temporary variables like we did in the Cambodia example above. This new syntax leads to code that is much easier to write and to read: it actually tells the story of your analysis.</h2>
+<pre class="r"><code>gapminder %&gt;% head()</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   country      year      pop continent lifeExp gdpPercap
+##   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Afghanistan  1952  8425333 Asia         28.8      779.
+## 2 Afghanistan  1957  9240934 Asia         30.3      821.
+## 3 Afghanistan  1962 10267083 Asia         32.0      853.
+## 4 Afghanistan  1967 11537966 Asia         34.0      836.
+## 5 Afghanistan  1972 13079460 Asia         36.1      740.
+## 6 Afghanistan  1977 14880372 Asia         38.4      786.</code></pre>
+<pre class="r"><code>gapminder %&gt;% head(3)</code></pre>
+<pre><code>## # A tibble: 3 x 6
+##   country      year      pop continent lifeExp gdpPercap
+##   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Afghanistan  1952  8425333 Asia         28.8      779.
+## 2 Afghanistan  1957  9240934 Asia         30.3      821.
+## 3 Afghanistan  1962 10267083 Asia         32.0      853.</code></pre>
+<p>This means that instead of this:</p>
+</div>
+<div id="instead-of-this" class="section level2">
+<h2>instead of this…</h2>
+<p>gap_cambodia &lt;- filter(gapminder, country == “Cambodia”) gap_cambodia2 &lt;- select(gap_cambodia, -continent, -lifeExp)</p>
+</div>
+<div id="we-can-do-this" class="section level2">
+<h2>…we can do this</h2>
+<p>gap_cambodia &lt;- gapminder %&gt;% filter(country == “Cambodia”) gap_cambodia2 &lt;- gap_cambodia %&gt;% select(-continent, -lifeExp)</p>
+<p>…But, we still have those temporary variables so we’re not truly that better off. But get ready to be majorly impressed:</p>
+</div>
+</div>
+<div id="revel-in-the-convenience" class="section level1">
+<h1>6.9.1 Revel in the convenience</h1>
+<p>We can use the pipe to chain those two operations together:</p>
+<pre class="r"><code>gap_cambodia  &lt;- gapminder %&gt;% 
+  filter(country == &quot;Cambodia&quot;) %&gt;%
+  select(-continent, -lifeExp) </code></pre>
+<p>What’s happening here? In the second line, we were able to delete gap_cambodia2 &lt;- gap_cambodia, and put the pipe operator above. This is possible since we wanted to operate on the gap_cambodia data anyways. And we weren’t truly excited about having a second variable named gap_cambodia2 anyways, so we can get rid of it. This is huge, because most of your data wrangling will have many more than 2 steps, and we don’t want a gap_cambodia14!</p>
+<p>By using multiple lines I can actually read this like a story and there aren’t temporary variables that get super confusing. In my head:</p>
+<pre><code>“start with the gapminder data, and then
+filter for Cambodia, and then
+drop the variables continent and lifeExp.”</code></pre>
+<p>Being able to read a story out of code like this is really game-changing. We’ll continue using this syntax as we learn the other dplyr verbs.</p>
+</div>
+<div id="mutate-adds-new-variables" class="section level1">
+<h1>6.10 mutate() adds new variables</h1>
+<p>Imagine we want to know each country’s annual GDP. We can multiply pop by gdpPercap to create a new column named gdp.</p>
+<pre class="r"><code>gapminder %&gt;% mutate (gdp = pop * gdpPercap)</code></pre>
+<pre><code>## # A tibble: 1,704 x 7
+##    country      year      pop continent lifeExp gdpPercap          gdp
+##    &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+##  1 Afghanistan  1952  8425333 Asia         28.8      779.  6567086330.
+##  2 Afghanistan  1957  9240934 Asia         30.3      821.  7585448670.
+##  3 Afghanistan  1962 10267083 Asia         32.0      853.  8758855797.
+##  4 Afghanistan  1967 11537966 Asia         34.0      836.  9648014150.
+##  5 Afghanistan  1972 13079460 Asia         36.1      740.  9678553274.
+##  6 Afghanistan  1977 14880372 Asia         38.4      786. 11697659231.
+##  7 Afghanistan  1982 12881816 Asia         39.9      978. 12598563401.
+##  8 Afghanistan  1987 13867957 Asia         40.8      852. 11820990309.
+##  9 Afghanistan  1992 16317921 Asia         41.7      649. 10595901589.
+## 10 Afghanistan  1997 22227415 Asia         41.8      635. 14121995875.
+## # ... with 1,694 more rows</code></pre>
+<pre class="r"><code>gapminder %&gt;% filter (continent == &quot;asia&quot;, year == 2007) %&gt;%  mutate(pop_thousands = pop/1000) %&gt;% select(country, year, pop_thousands) #this cleans up the dataframe but isn&#39;t necessary </code></pre>
+<pre><code>## # A tibble: 0 x 3
+## # ... with 3 variables: country &lt;chr&gt;, year &lt;dbl&gt;, pop_thousands &lt;dbl&gt;</code></pre>
 </div>
 
 

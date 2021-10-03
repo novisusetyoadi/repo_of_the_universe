@@ -69,4 +69,119 @@ str(gapminder$lifeExp) # it is a single numeric vector
 summary(gapminder$lifeExp) # same information, formatted slightly differently
 ```
 
-# Sampai 6.4 dplyr basics
+# 6.4 dplyr basics
+
+## filter() is a function in dplyr that takes logical expressions and returns the rows for which all are TRUE.
+
+```{r}
+filter(gapminder, lifeExp < 29)
+```
+
+```{r}
+filter(gapminder, country == "Mexico")
+```
+
+```{r}
+filter(gapminder, country %in% c("Mexico", "Peru"))
+```
+
+```{r}
+filter(gapminder, country == "Mexico", year == 2002)
+```
+
+# 6.6 Your turn
+
+## What was the average life expectency in Brazil between 1987 and 2007? 
+## Hint: do this in 2 steps by assigning a variable and then using the mean() function.
+## Then, sync to Github.com (pull, stage, commit, push).
+
+```{r}
+b <- filter (gapminder, country == "Brazil", year > 1986)
+```
+
+```{r}
+mean (b$lifeExp)
+```
+
+# 6.7 select() subsets data column-wise (variables)
+
+## We use select() to subset the data on variables or columns.
+
+```{r}
+select(gapminder, year, country, lifeExp) 
+```
+
+```{r}
+select(gapminder, -continent, -lifeExp) # you can use - to deselect columns 
+```
+
+# 6.8 Use select() and filter() together
+
+```{r}
+gap_cambodia  <- filter(gapminder, country == "Cambodia")
+```
+
+```{r}
+gap_cambodia2 <- select(gap_cambodia, -continent, -lifeExp)
+```
+
+# 6.9 Meet the new pipe %>% operator
+
+## Before we go any further, we should explore the new pipe operator that dplyr imports from the magrittr package by Stefan Bache. This is going to change your life. You no longer need to enact multi-operation commands by nesting them inside each other. And we won’t need to make temporary variables like we did in the Cambodia example above. This new syntax leads to code that is much easier to write and to read: it actually tells the story of your analysis.
+
+```{r}
+gapminder %>% head()
+```
+
+```{r}
+gapminder %>% head(3)
+```
+
+This means that instead of this:
+
+## instead of this...
+gap_cambodia  <- filter(gapminder, country == "Cambodia")
+gap_cambodia2 <- select(gap_cambodia, -continent, -lifeExp) 
+
+## ...we can do this
+gap_cambodia  <- gapminder %>% filter(country == "Cambodia")
+gap_cambodia2 <- gap_cambodia %>% select(-continent, -lifeExp) 
+
+…But, we still have those temporary variables so we’re not truly that better off. But get ready to be majorly impressed:
+
+# 6.9.1 Revel in the convenience
+
+We can use the pipe to chain those two operations together:
+
+```{r}
+gap_cambodia  <- gapminder %>% 
+  filter(country == "Cambodia") %>%
+  select(-continent, -lifeExp) 
+```
+
+What’s happening here? In the second line, we were able to delete gap_cambodia2 <- gap_cambodia, and put the pipe operator above. This is possible since we wanted to operate on the gap_cambodia data anyways. And we weren’t truly excited about having a second variable named gap_cambodia2 anyways, so we can get rid of it. This is huge, because most of your data wrangling will have many more than 2 steps, and we don’t want a gap_cambodia14!
+
+By using multiple lines I can actually read this like a story and there aren’t temporary variables that get super confusing. In my head:
+
+    “start with the gapminder data, and then
+    filter for Cambodia, and then
+    drop the variables continent and lifeExp.”
+
+Being able to read a story out of code like this is really game-changing. We’ll continue using this syntax as we learn the other dplyr verbs.
+
+# 6.10 mutate() adds new variables
+
+Imagine we want to know each country’s annual GDP. We can multiply pop by gdpPercap to create a new column named gdp.
+
+```{r}
+gapminder %>% mutate (gdp = pop * gdpPercap)
+```
+
+Calculate the population in thousands for all Asian countries in the year 2007 and add it as a new column.
+
+```{r}
+gapminder %>%
+  filter(continent == "Asia",year == 2007) %>% mutate(pop_thousands_asia = pop/1000) %>% select(country, year, pop_thousands_asia) #this cleans up the dataframe but isn't necessary
+```
+
+
