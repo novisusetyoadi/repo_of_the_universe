@@ -184,4 +184,53 @@ gapminder %>%
   filter(continent == "Asia",year == 2007) %>% mutate(pop_thousands_asia = pop/1000) %>% select(country, year, pop_thousands_asia) #this cleans up the dataframe but isn't necessary
 ```
 
+# 6.11 group_by() operates on groups
+
+What if we wanted to know the total population on each continent in 2002? Answering this question requires a grouping variable.
+
+```{r}
+gapminder %>%
+  filter(year == 2002) %>% group_by(continent) %>% mutate(cont_pop = sum(pop))
+```
+
+OK, this is great. But what if we don’t care about the other columns and we only want each continent and their population in 2002? Here’s the next function:
+
+# 6.11.1 summarize() with group_by()
+
+```{r}
+gapminder %>%
+  group_by(continent) %>%
+  summarize(cont_pop = sum(pop)) %>%
+  ungroup()
+```
+
+We can use more than one grouping variable. Let’s get total populations by continent and year.
+
+```{r}
+gapminder %>%
+  group_by(continent, year) %>%
+  summarize(cont_pop = sum(pop))
+```
+
+# 6.12 arrange() orders columns
+
+This is ordered alphabetically, which is cool. But let’s say we wanted to order it in ascending order for year. The dplyr function is arrange().
+
+```{r}
+gapminder %>%
+  group_by(continent, year) %>%
+  summarize(cont_pop = sum(pop)) %>%
+  arrange(year)
+```
+
+6.12.1 Your turn
+
+    What is the maximum GDP per continent across all years?
+
+```{r}
+gapminder %>%
+  group_by(continent, year, gdpPercap) %>%
+  mutate(max_gdp = max(gdpPercap))
+  summarize(cont_pop = sum(pop)) %>%
+```
 
