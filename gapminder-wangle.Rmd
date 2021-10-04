@@ -399,7 +399,7 @@ lj <- left_join(gap_2007, co2, by = "country")
 ```{r}
 ## explore
 lj %>% dim() #142
-lj %>% summary() # lots of NAs in the co2_2017 columm
+lj %>% summary() # lots of NAs in the co2_2007 columm
 lj %>% View()
 ```
 
