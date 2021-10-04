@@ -370,6 +370,8 @@ gap_max_gdp_cont <- gapminder %>%
   summarize(max_gdp_cont = max(gdp_cont)) %>% arrange (desc(max_gdp_cont)); gap_max_gdp_cont
 ```
 
+# 6.14 Joining datasets
+
 ## read in the data. (same URL as yesterday, with co2.csv instead of gapminder.csv)
 
 ```{r}
