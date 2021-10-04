@@ -231,11 +231,12 @@ gapminder %>%
 
 ```{r}
 gapminder %>%
-  group_by(continent, year, gdpPercap) %>%
-  mutate(max_gdp = max(gdpPercap))
-  summarize(cont_pop = sum(pop)) %>%
+  mutate(gdp = pop * gdpPercap) %>%
+  group_by(continent) %>%
+  mutate(max_gdp = max(gdp)) %>%
+  filter(gdp == max_gdp)
 ```
->>>>>>> 2d38017f7030b616a994b759cbbaddd2f2b7762f
+
 
 What if we wanted to know the total population on each continent in 2002? Answering this question requires a grouping variable.
 
@@ -278,9 +279,138 @@ gapminder %>%
 
     What is the maximum GDP per continent across all years?
 
+6.12.1.1 Answer
+
 ```{r}
 gapminder %>%
-  group_by(continent, year, gdpPercap) %>%
-  mutate(max_gdp = max(gdpPercap)) %>%
-  summarize(cont_pop = sum(pop))
+  mutate(gdp = pop * gdpPercap) %>%
+  group_by(continent) %>%
+  mutate(max_gdp = max(gdp)) %>%
+  filter(gdp == max_gdp)
 ```
+
+6.12.2 Your turn
+
+1. arrange your data frame in descending order (opposite of what we’ve done). Expect that this is possible: ?arrange
+2. save your data frame as a variable
+3. find the maximum life expectancy for countries in Asia. What is the earliest year you encounter? The latest? Hint: you can use or base::max and dplyr::arrange()…
+4. Knit your RMarkdown file, and sync it to GitHub (pull, stage, commit, push)
+
+
+6.12.2.1 Answer 
+
+```{r}
+asia_life_exp <- gapminder %>%
+  filter(continent == 'Asia') %>%
+  group_by(country) %>%
+  filter(lifeExp == max(lifeExp)) %>%
+  arrange(year) ; asia_life_exp 
+```
+
+# my own version 1
+```{r}
+gapminder %>% filter (continent == "Asia") %>% select (lifeExp, country, continent, year) %>% group_by(country) %>% filter (lifeExp == max(lifeExp)) %>% arrange (lifeExp)
+```
+
+# my own version 2
+```{r}
+gapminder %>% filter (continent == "Asia") %>% select (lifeExp, country, continent, year) %>% group_by(country) %>% filter (lifeExp == max(lifeExp)) %>% arrange (desc(lifeExp))
+```
+
+# my own exercise 1
+```{r}
+gapminder %>% filter (country == "Indonesia") %>% select(country, year, gdpPercap, pop, lifeExp)
+```
+
+# my own exercise 2
+```{r}
+ina <- gapminder %>% filter (country == "Indonesia") %>% select(country, year, gdpPercap, pop, lifeExp) ; ggplot(data = ina) +
+    geom_point(aes(x = year, y = gdpPercap, color = pop))
+```
+
+# my own exercise 3
+```{r}
+ggplot(data = gapminder) +
+    geom_point(aes(x = pop, y = gdpPercap))
+```
+
+# 6.13 All together now
+
+```{r}
+gap_max_gdp <- gapminder %>% 
+  select(-continent, -lifeExp) %>% # or select(country, year, pop, gdpPercap)
+  group_by(country) %>%
+  mutate(gdp = pop * gdpPercap) %>%
+  summarize(max_gdp = max(gdp)) ; gap_max_gdp
+```
+
+# my own version 1
+
+```{r}
+gap_max_gdp <- gapminder %>% 
+  group_by(country) %>%
+  mutate(gdp = pop * gdpPercap) %>%
+  summarize(max_gdp = max(gdp)) ; gap_max_gdp
+```
+
+# my own version 2
+
+```{r}
+gap_max_gdp_cont <- gapminder %>% 
+  group_by(continent, country, year) %>%
+  mutate(gdp_cont = pop * gdpPercap) %>%
+  summarize(max_gdp_cont = max(gdp_cont)) %>% arrange (desc(max_gdp_cont)); gap_max_gdp_cont
+```
+# my own version 3
+
+```{r}
+gap_max_gdp_cont <- gapminder %>% 
+  group_by(continent) %>%
+  mutate(gdp_cont = pop * gdpPercap) %>%
+  summarize(max_gdp_cont = max(gdp_cont)) %>% arrange (desc(max_gdp_cont)); gap_max_gdp_cont
+```
+
+## read in the data. (same URL as yesterday, with co2.csv instead of gapminder.csv)
+
+```{r}
+co2 <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/co2.csv")
+```
+
+```{r}
+## explore
+co2 %>% head()
+co2 %>% dim() # 12
+```
+
+```{r}
+## create new variable that is only 2007 data
+gap_2007 <- gapminder %>%
+  filter(year == 2007) 
+gap_2007 %>% dim() # 142  
+```
+
+```{r}
+## left_join gap_2007 to co2
+lj <- left_join(gap_2007, co2, by = "country")
+```
+
+```{r}
+## explore
+lj %>% dim() #142
+lj %>% summary() # lots of NAs in the co2_2017 columm
+lj %>% View()
+```
+
+```{r}
+## right_join gap_2007 and co2
+rj <- right_join(gap_2007, co2, by = "country")
+```
+
+
+```{r}
+## explore
+rj %>% dim() # 12
+rj %>% summary()
+rj %>% View() 
+```
+
