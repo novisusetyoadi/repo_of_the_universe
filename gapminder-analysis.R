@@ -5,3 +5,6 @@
 
 library (tidyverse)
 
+## filter the country to plot
+gap_to_plot <- gapminder %>%
+  filter(country == "Afghanistan")
