@@ -1,0 +1,8 @@
+---
+title: "R-Sript"
+author: "Novi s adi"
+date: "10/5/2021"
+output: html_document
+---
+
+# It turns out no usage of R Mark Down file. So, I'll stop here.
