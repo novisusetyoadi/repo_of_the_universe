@@ -1,0 +1,77 @@
+---
+title: "Data Wrangling - Tidyr"
+author: "Novi s adi"
+date: "10/5/2021"
+output: html_document
+---
+
+# Data wrangling with `tidyr`, which is part of the tidyverse. We are going to tidy some data!
+
+```{r}
+## wide format
+gap_wide <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder_wide.csv')
+```
+# 1. Not satisfacgtory
+```{r}
+library (tidyverse)
+gap_long <- gap_wide %>% gather(key = obstype_year,
+         value = obs_values)
+```
+
+# 2. Too much argument
+```{r}
+gap_long <- gap_wide %>% 
+  gather(key   = obstype_year,
+         value = obs_values,
+         dplyr::starts_with('pop'),
+         dplyr::starts_with('lifeExp'),
+         dplyr::starts_with('gdpPercap'))  #here i'm listing all the columns to use in gather
+```
+
+# 3. Most effective one
+```{r}
+gap_long <- gap_wide %>% 
+  gather(key   = obstype_year,
+         value = obs_values,
+         -continent, -country)
+```
+
+```{r}
+gap_long <- gap_wide %>% 
+  gather(key   = obstype_year,
+         value = obs_values,
+         -continent, -country) %>%
+  separate(obstype_year,
+           into = c('obs_type','year'),
+           sep = "_",
+           convert = TRUE) #this ensures that the year column is an integer rather than a character
+```
+
+# 7.5 Plot long format data
+The long format is the preferred format for plotting with ggplot2. Let’s look at an example by plotting just Canada’s life expectancy.
+
+```{r}
+canada_df <- gap_long %>%
+  filter(obs_type == "lifeExp",
+         country == "Canada")
+```
+
+```{r}
+ggplot(canada_df, aes(x = year, y = obs_values)) +
+  geom_line()
+```
+
+We can also look at all countries in the Americas:
+
+```{r}
+life_df <- gap_long %>% filter (obs_type == "lifeExp",continent == "Americas")
+```
+
+```{r}
+ggplot(life_df, aes(x = year, y = obs_values, color = country)) +
+  geom_line()
+```
+
+# 7.5 Exercise
+
+Using gap_long, calculate and plot the the mean life expectancy for each continent over time from 1982 to 2007. Give your plot a title and assign x and y labels. Hint: do this in two steps. First, do the logic and calculations using dplyr::group_by() and dplyr::summarize(). Second, plot using ggplot()
