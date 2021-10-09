@@ -338,7 +338,7 @@ for( cntry in country_list ){ # (cntry = country_list[1])
   
 } 
 
-# IV. My Own Practice
+# IV. My Own Practice 1 : Asia
 
 #dir.create("figures/Asia")
 
@@ -384,3 +384,48 @@ for( cntry in country_list ){ # (cntry = country_list[1])
   
 } 
 
+# V. My Own Practice 1 : America
+
+dir.create("figures/America")
+
+## create a list of countries
+gap_america <- gapminder_est %>% ## use instead of gapminder
+  filter(continent == "Americas") %>%
+  mutate(gdpPercap_cummean = dplyr::cummean(gdpPercap))
+
+country_list <- unique(gap_america$country) 
+
+for( cntry in country_list ){ # (cntry = country_list[1])
+  
+  ## filter the country to plot
+  gap_to_plot_america <- gap_america %>%
+    filter(country == cntry)
+  
+  ## add a print message 
+  print(paste("Plotting", cntry))
+  
+  ## plot
+  my_plot_america <- ggplot(data = gap_to_plot_america, aes(x = year, y = gdpPercap_cummean)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, "GDP per capita", sep = " "))
+  
+  ## if estimated, add that as a subtitle. 
+  if (any(gap_to_plot_asia$estimated == "yes")) { # any() will return a single TRUE or FALSE
+    
+    print(paste(cntry, "data are estimated"))
+    
+    my_plot_america <- my_plot_america +
+      labs(subtitle = "Estimated data")
+  } else if (any(gap_to_plot_america$estimated == "no")) {
+    
+    my_plot_america <- my_plot_america +
+      labs(subtitle = "Reported data")
+    
+    print(paste(cntry, "data are reported"))
+    
+  }
+  ggsave(filename = paste("figures/America/", cntry, "_gdpPercap_cummean.png", sep = ""), 
+         plot = my_plot_america)
+  
+}
